@@ -1,0 +1,511 @@
+/* Model Snapshot — SillyTavern 테마 변수를 그대로 상속받아 튀지 않게 한다 */
+
+#msnap-panel {
+    /* bottom 대신 명시적 height 를 쓴다. 조상 containing block 문제나
+       모바일 브라우저 주소창 때문에 bottom:0 이 어긋나는 경우를 피하기 위함. */
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    display: none;
+    flex-direction: column;
+    z-index: 10000;
+    /* 배경은 JS(applySurface)가 불투명 기준색 + 테마 틴트로 덮어쓴다.
+       아래 값은 JS 실행 전/실패 시의 안전한 기본값. */
+    background-color: #17181c;
+    color: var(--SmartThemeBodyColor, #ddd);
+    border-left: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.35);
+    font-size: 0.95em;
+    overscroll-behavior: contain;
+}
+
+#msnap-panel.open { display: flex; }
+
+@media (max-width: 768px) {
+    #msnap-panel {
+        width: 100vw;
+        width: 100dvw;
+        left: 0;
+        right: 0;
+        border-left: none;
+    }
+}
+
+/* ── 헤더 / 탭 ── */
+.msnap-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+    flex: 0 0 auto;
+}
+.msnap-head-title { font-weight: 700; flex: 1 1 auto; }
+.msnap-head-actions { display: flex; gap: 4px; }
+
+.msnap-tabs {
+    display: flex;
+    flex: 0 0 auto;
+    border-bottom: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+}
+.msnap-tab {
+    flex: 1 1 0;
+    padding: 9px 4px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: inherit;
+    opacity: 0.6;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+.msnap-tab.active {
+    opacity: 1;
+    border-bottom-color: var(--SmartThemeQuoteColor, #7aa2f7);
+    font-weight: 600;
+}
+
+.msnap-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 12px 40px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ── 공통 컨트롤 ── */
+.msnap-icon-btn {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 1em;
+    line-height: 1.2;
+}
+.msnap-icon-btn:hover { background: rgba(127, 127, 127, 0.18); }
+.msnap-icon-btn.active { border-color: var(--SmartThemeQuoteColor, #7aa2f7); }
+
+.msnap-btn {
+    background: rgba(127, 127, 127, 0.16);
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.18));
+    border-radius: 6px;
+    color: inherit;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+.msnap-btn:hover:not(:disabled) { background: rgba(127, 127, 127, 0.28); }
+.msnap-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.msnap-btn-primary { background: var(--SmartThemeQuoteColor, #7aa2f7); color: #10131a; font-weight: 600; border-color: transparent; }
+.msnap-btn-danger { background: #b8483f; color: #fff; border-color: transparent; }
+.msnap-btn-sm { padding: 5px 10px; font-size: 0.88em; }
+.msnap-btnrow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+.msnap-linkbtn {
+    background: none;
+    border: none;
+    color: var(--SmartThemeQuoteColor, #7aa2f7);
+    cursor: pointer;
+    padding: 3px 4px;
+    font-size: 0.88em;
+    text-decoration: none;
+}
+.msnap-linkbtn:hover { text-decoration: underline; }
+.msnap-linkbtn.danger { color: #e0736a; }
+
+.msnap-mini {
+    background: rgba(127, 127, 127, 0.14);
+    border: 1px solid transparent;
+    border-radius: 5px;
+    color: inherit;
+    padding: 3px 8px;
+    font-size: 0.82em;
+    cursor: pointer;
+    opacity: 0.85;
+}
+.msnap-mini:hover { opacity: 1; background: rgba(127, 127, 127, 0.26); }
+.msnap-mini.on { background: var(--SmartThemeQuoteColor, #7aa2f7); color: #10131a; opacity: 1; }
+.msnap-mini.danger { color: #e0736a; }
+
+.msnap-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.18));
+    border-radius: 6px;
+    color: inherit;
+    padding: 7px 9px;
+    font-size: 0.95em;
+    font-family: inherit;
+}
+.msnap-input-sm { max-width: 110px; }
+.msnap-textarea { min-height: 74px; resize: vertical; }
+.msnap-field { margin: 8px 0; }
+.msnap-label { font-size: 0.86em; opacity: 0.85; margin-bottom: 4px; }
+.msnap-sub { opacity: 0.55; font-size: 0.92em; font-weight: 400; word-break: break-all; }
+.msnap-hint { font-size: 0.8em; opacity: 0.6; margin: 6px 0; line-height: 1.5; }
+.msnap-warn {
+    font-size: 0.82em;
+    background: rgba(200, 120, 40, 0.16);
+    border-left: 3px solid #c8783c;
+    padding: 7px 9px;
+    border-radius: 4px;
+    margin: 8px 0;
+    line-height: 1.5;
+}
+.msnap-banner {
+    font-size: 0.85em;
+    background: rgba(90, 140, 220, 0.16);
+    border-left: 3px solid var(--SmartThemeQuoteColor, #7aa2f7);
+    padding: 7px 9px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+.msnap-mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82em; opacity: 0.8; word-break: break-all; }
+.msnap-wrap { word-break: break-all; }
+.msnap-dim { opacity: 0.45; pointer-events: none; }
+
+.msnap-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88em;
+    margin: 5px 0;
+    cursor: pointer;
+}
+.msnap-check input { margin: 0; flex: 0 0 auto; }
+
+.msnap-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.msnap-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.msnap-row-inline { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 8px 0; }
+@media (max-width: 480px) {
+    .msnap-row3 { grid-template-columns: 1fr; }
+}
+
+.msnap-section { margin: 14px 0; }
+.msnap-section-title {
+    font-size: 0.82em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+    margin: 14px 0 6px;
+    font-weight: 700;
+}
+.msnap-kvlist { display: flex; flex-direction: column; gap: 3px; }
+.msnap-kv {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.86em;
+    padding: 3px 0;
+    border-bottom: 1px dotted rgba(127, 127, 127, 0.2);
+}
+.msnap-kv span { opacity: 0.65; flex: 0 0 auto; }
+.msnap-kv b { text-align: right; word-break: break-all; font-weight: 600; }
+
+.msnap-empty { text-align: center; opacity: 0.55; padding: 30px 14px; font-size: 0.88em; line-height: 1.7; }
+.msnap-empty-sm { opacity: 0.5; font-size: 0.82em; padding: 8px 2px; }
+.msnap-count { font-size: 0.78em; opacity: 0.5; margin: 8px 0 4px; }
+
+/* ── 툴바 / 필터 ── */
+.msnap-toolbar { display: flex; gap: 6px; align-items: center; }
+.msnap-filterpane {
+    display: none;
+    padding: 8px;
+    margin-top: 8px;
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+    border-radius: 8px;
+}
+.msnap-filterpane.open { display: block; }
+.msnap-diffbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.84em;
+    background: rgba(127, 127, 127, 0.14);
+    padding: 6px 9px;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+/* ── 카드 ── */
+.msnap-list { display: flex; flex-direction: column; gap: 8px; }
+.msnap-card {
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.14));
+    border-radius: 8px;
+    overflow: hidden;
+}
+.msnap-card.open { border-color: var(--SmartThemeQuoteColor, #7aa2f7); }
+.msnap-card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+}
+.msnap-card-head:hover { background: rgba(127, 127, 127, 0.08); }
+.msnap-star {
+    background: none; border: none; cursor: pointer;
+    color: inherit; opacity: 0.4; font-size: 1.1em; padding: 0; line-height: 1.2;
+}
+.msnap-star.on { opacity: 1; color: #e6c34a; }
+.msnap-card-title { flex: 1 1 auto; min-width: 0; }
+.msnap-card-name { font-weight: 600; word-break: break-all; line-height: 1.35; }
+.msnap-at { opacity: 0.4; margin: 0 2px; }
+.msnap-card-sub { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.msnap-tag {
+    font-size: 0.72em;
+    background: rgba(127, 127, 127, 0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.85;
+    word-break: break-all;
+}
+.msnap-card-right { flex: 0 0 auto; text-align: right; }
+.msnap-rating { font-size: 0.8em; white-space: nowrap; cursor: pointer; }
+.msnap-rstar { opacity: 0.25; }
+.msnap-rstar.on { opacity: 1; color: #e6c34a; }
+.msnap-snapcount { font-size: 0.72em; opacity: 0.6; margin-top: 4px; }
+.msnap-snapcount.zero { opacity: 0.35; font-style: italic; }
+
+.msnap-badge { font-size: 0.68em; padding: 1px 5px; border-radius: 4px; margin-left: 4px; white-space: nowrap; }
+.msnap-badge-ok { display: none; }
+.msnap-badge-unstable { background: #8a6d2f; color: #fff; }
+.msnap-badge-dead { background: #7d3b36; color: #fff; }
+.msnap-badge-paid { background: #3f6b7d; color: #fff; }
+.msnap-badge-pending { background: #6b4b7d; color: #fff; }
+
+.msnap-card-body { padding: 0 10px 10px; border-top: 1px dashed rgba(127, 127, 127, 0.25); }
+.msnap-card-actions { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px 0; }
+.msnap-cardmemo {
+    font-size: 0.85em;
+    line-height: 1.6;
+    background: rgba(127, 127, 127, 0.1);
+    padding: 7px 9px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    white-space: normal;
+}
+
+/* ── 스냅샷 ── */
+.msnap-snaps { display: flex; flex-direction: column; gap: 6px; }
+.msnap-snap {
+    border-left: 2px solid rgba(127, 127, 127, 0.35);
+    padding: 6px 0 6px 9px;
+}
+.msnap-snap.picked { border-left-color: var(--SmartThemeQuoteColor, #7aa2f7); background: rgba(90, 140, 220, 0.08); }
+.msnap-snap-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.8em; }
+.msnap-snap-date { font-weight: 600; opacity: 0.85; }
+.msnap-snap-ctx { opacity: 0.55; word-break: break-all; }
+.msnap-snap-labels { display: flex; flex-wrap: wrap; gap: 3px; margin: 5px 0; }
+.msnap-schip {
+    font-size: 0.72em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--msnap-c, #888) 26%, transparent);
+    border: 1px solid color-mix(in srgb, var(--msnap-c, #888) 55%, transparent);
+    white-space: nowrap;
+}
+.msnap-schip.missing { opacity: 0.5; text-decoration: line-through; }
+.msnap-snap-memo { font-size: 0.85em; line-height: 1.55; margin: 5px 0; opacity: 0.92; }
+.msnap-snap-actions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+
+/* ── 라벨 피커 ── */
+.msnap-labels { display: flex; flex-direction: column; gap: 5px; }
+.msnap-lgroup { border: 1px solid rgba(127, 127, 127, 0.22); border-radius: 7px; overflow: hidden; }
+.msnap-lgroup-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 7px 9px;
+    cursor: pointer;
+    font-size: 0.86em;
+    text-align: left;
+}
+.msnap-lgroup-head.static { cursor: default; }
+.msnap-lgroup-head:hover { background: rgba(127, 127, 127, 0.1); }
+.msnap-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--msnap-c, #888); flex: 0 0 auto; }
+.msnap-lgroup-name { flex: 1 1 auto; font-weight: 600; }
+.msnap-lgroup-count {
+    font-size: 0.85em;
+    min-width: 18px;
+    text-align: center;
+    color: var(--msnap-c, #888);
+    font-weight: 700;
+}
+.msnap-caret { opacity: 0.5; transition: transform 0.15s; }
+.msnap-lgroup.open .msnap-caret { transform: rotate(180deg); }
+.msnap-lgroup-body { display: none; flex-wrap: wrap; gap: 4px; padding: 0 9px 9px; }
+.msnap-lgroup.open .msnap-lgroup-body { display: flex; }
+.msnap-lgroup-body.vertical { flex-direction: column; }
+
+.msnap-chip {
+    font-size: 0.8em;
+    padding: 4px 9px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--msnap-c, #888) 45%, transparent);
+    color: inherit;
+    opacity: 0.6;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.msnap-chip.on {
+    opacity: 1;
+    background: color-mix(in srgb, var(--msnap-c, #888) 30%, transparent);
+    border-color: var(--msnap-c, #888);
+    font-weight: 600;
+}
+.msnap-axis { display: inline-flex; align-items: center; gap: 5px; }
+.msnap-axis.up, .msnap-axis.down {
+    opacity: 1;
+    background: color-mix(in srgb, var(--msnap-c, #888) 30%, transparent);
+    border-color: var(--msnap-c, #888);
+    font-weight: 600;
+}
+.msnap-axis-mark { font-size: 0.9em; }
+
+.msnap-labelrow { display: flex; align-items: center; gap: 6px; padding: 3px 0; flex-wrap: wrap; }
+/* 숨김 상태는 투명도가 아니라 명시적 배지로 나타낸다.
+   (투명도를 겹치면 칩 자체 opacity 와 곱해져 사실상 보이지 않게 된다) */
+.msnap-labelrow.hidden .msnap-chip {
+    opacity: 1;
+    text-decoration: line-through;
+    border-style: dashed;
+}
+.msnap-labelrow .msnap-chip { cursor: default; opacity: 1; }
+.msnap-hidden-badge {
+    font-size: 0.68em;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(127, 127, 127, 0.3);
+    white-space: nowrap;
+}
+.msnap-usage { font-size: 0.75em; opacity: 0.5; flex: 1 1 auto; }
+
+/* ── 엔티티 ── */
+.msnap-entity {
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.14));
+    border-radius: 8px;
+    padding: 9px 10px;
+}
+.msnap-entity.pending { border-color: #6b4b7d; }
+.msnap-entity-head { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.msnap-entity-sub { font-size: 0.76em; opacity: 0.55; margin-top: 4px; word-break: break-all; font-family: ui-monospace, Menlo, Consolas, monospace; }
+.msnap-entity-memo { font-size: 0.83em; margin-top: 6px; line-height: 1.5; opacity: 0.9; }
+.msnap-entity-actions { margin-top: 6px; display: flex; gap: 4px; }
+
+/* ── 모달 ── */
+.msnap-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+}
+.msnap-modal {
+    /* 배경은 JS(applySurface)가 불투명하게 덮어쓴다. 아래는 기본값. */
+    background-color: #17181c;
+    color: var(--SmartThemeBodyColor, #ddd);
+    border: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.18));
+    border-radius: 10px;
+    width: 100%;
+    max-width: 420px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    font-size: 0.95em;
+}
+.msnap-modal-wide { max-width: 620px; }
+.msnap-modal-head {
+    display: flex;
+    align-items: center;
+    padding: 11px 13px;
+    border-bottom: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+    flex: 0 0 auto;
+}
+.msnap-modal-title { flex: 1 1 auto; font-weight: 700; }
+.msnap-modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 12px 13px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+.msnap-modal-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 7px;
+    padding: 10px 13px;
+    border-top: 1px solid var(--SmartThemeBorderColor, rgba(255, 255, 255, 0.15));
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+}
+.msnap-msg { line-height: 1.65; font-size: 0.92em; }
+
+.msnap-details { margin-top: 10px; }
+.msnap-details summary { cursor: pointer; font-size: 0.84em; opacity: 0.7; padding: 4px 0; }
+.msnap-pending { border: 1px solid #6b4b7d; border-radius: 8px; padding: 9px 10px; }
+
+/* ── 비교 테이블 ── */
+.msnap-difftable { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.msnap-difftable th, .msnap-difftable td {
+    padding: 5px 7px;
+    border-bottom: 1px solid rgba(127, 127, 127, 0.2);
+    text-align: left;
+    word-break: break-all;
+    vertical-align: top;
+}
+.msnap-difftable thead th { opacity: 0.9; font-weight: 700; }
+.msnap-difftable tbody th { opacity: 0.6; font-weight: 500; width: 30%; }
+.msnap-difftable tr.sec th { background: rgba(127, 127, 127, 0.14); font-weight: 700; opacity: 0.9; }
+.msnap-difftable tr.diff td { background: rgba(200, 120, 40, 0.16); font-weight: 600; }
+.msnap-diffmemo { font-size: 0.84em; margin: 6px 0; line-height: 1.55; }
+.msnap-diffmemo b { opacity: 0.6; font-size: 0.9em; }
+
+/* ── 로그 ── */
+.msnap-loglist { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.72em; line-height: 1.6; }
+.msnap-logline { padding: 2px 0; border-bottom: 1px dotted rgba(127, 127, 127, 0.18); word-break: break-all; }
+.msnap-logline span { opacity: 0.45; }
+.msnap-log-error { color: #e0736a; }
+.msnap-log-warn { color: #d9a13c; }
+
+.msnap-danger-zone { border: 1px solid rgba(184, 72, 63, 0.5); border-radius: 8px; padding: 9px 10px; }
+
+/* ── 메시지 이동 플래시 ── */
+.msnap-flash {
+    animation: msnap-flash-anim 1.8s ease-out 1;
+}
+@keyframes msnap-flash-anim {
+    0%   { box-shadow: inset 0 0 0 2px var(--SmartThemeQuoteColor, #7aa2f7); }
+    100% { box-shadow: inset 0 0 0 2px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .msnap-flash { animation: none; outline: 2px solid var(--SmartThemeQuoteColor, #7aa2f7); }
+    .msnap-caret { transition: none; }
+}

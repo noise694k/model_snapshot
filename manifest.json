@@ -1,0 +1,12 @@
+{
+    "display_name": "Model Snapshot",
+    "loading_order": 100,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "nina",
+    "version": "0.1.3",
+    "homePage": "",
+    "auto_update": false
+}
